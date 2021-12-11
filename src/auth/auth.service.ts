@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { LocalSignupDto } from './dto/local-signup.dto';
+import { jwtConstants } from './constants';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -12,11 +14,10 @@ export class AuthService {
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(username);
-    if (user && user.password === pass) {
+    if (compare(user.password, pass)) {
       const { password, ...result } = user;
       return result;
-    }
-    return null;
+    } else return null;
   }
 
   async signup(localSignupDto: LocalSignupDto, res) {
@@ -31,10 +32,12 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign(user);
     res
-      .cookie('access_token', accessToken, {
+      .cookie(jwtConstants.cookieName, accessToken, {
         httpOnly: true,
         domain: 'localhost', // your domain here!
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        expires: new Date(
+          Date.now() + 1000 * 60 * 60 * jwtConstants.expiration,
+        ),
       })
       .send({ success: true });
   }
@@ -42,10 +45,12 @@ export class AuthService {
   async login(user: any, res) {
     const accessToken = this.jwtService.sign(user);
     res
-      .cookie('access_token', accessToken, {
+      .cookie(jwtConstants.cookieName, accessToken, {
         httpOnly: true,
         domain: 'localhost', // your domain here!
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        expires: new Date(
+          Date.now() + 1000 * 60 * 60 * jwtConstants.expiration,
+        ),
       })
       .send({ success: true });
   }

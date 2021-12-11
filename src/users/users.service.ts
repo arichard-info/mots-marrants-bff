@@ -14,8 +14,6 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = new this.userModel(createUserDto);
-    const createdUser = (await user.save()).toObject();
-    delete createdUser.password;
-    return createdUser;
+    return (await user.save()).toObject();
   }
 }
