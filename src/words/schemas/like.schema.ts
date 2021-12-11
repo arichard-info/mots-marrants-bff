@@ -13,7 +13,7 @@ export class Like {
   @Prop()
   date: Date;
 
-  @Prop({ ref: 'word', unique: true })
+  @Prop({ ref: 'word' })
   word: mongoose.Types.ObjectId;
 }
 
