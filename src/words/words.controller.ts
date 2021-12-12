@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Param, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Param,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { WordsService } from './words.service';
 import { Word } from './schemas/word.schema';
 import { CreateWordDto } from './dto/create-word.dto';
@@ -15,14 +23,14 @@ export class WordsController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/:id/like')
-  likeWord(@Param() params) {
-    return this.wordsService.like(params.id);
+  likeWord(@Param() params, @Request() req) {
+    return this.wordsService.like(params.id, req.user._id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/:id/dislike')
-  dislikeWord(@Param() params) {
-    return this.wordsService.dislike(params.id);
+  dislikeWord(@Param() params, @Request() req) {
+    return this.wordsService.dislike(params.id, req.user._id);
   }
 
   @UseGuards(JwtAuthGuard)

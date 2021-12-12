@@ -21,25 +21,27 @@ export class WordsService {
     return createdWord.save();
   }
 
-  async like(wordId: string) {
-    return this.updateLike(wordId, 1);
+  async like(wordId: string, userId: string) {
+    return this.updateLike(wordId, userId, 1);
   }
 
-  async dislike(wordId: string) {
-    return this.updateLike(wordId, -1);
+  async dislike(wordId: string, userId: string) {
+    return this.updateLike(wordId, userId, -1);
   }
 
-  async updateLike(wordId: string, value: number) {
-    const word = this.wordModel.findOne({ _id: wordId });
-    if (!word) throw new Error('No word found');
-    return await this.likeModel.findOneAndUpdate(
-      { word: new Types.ObjectId(wordId) },
+  async updateLike(wordId: string, userId: string, value: number) {
+    const word = await this.wordModel.findOne({ _id: wordId });
+    if (!word) throw new Error('Error: word not found');
+
+    return this.likeModel.findOneAndUpdate(
+      { word: new Types.ObjectId(wordId), user: new Types.ObjectId(userId) },
       {
         value,
         date: Date.now(),
       },
       {
         upsert: true,
+        new: true,
       },
     );
   }
