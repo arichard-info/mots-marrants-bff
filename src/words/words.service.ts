@@ -33,7 +33,7 @@ export class WordsService {
     const word = await this.wordModel.findOne({ _id: wordId });
     if (!word) throw new Error('Error: word not found');
 
-    const test = await this.likeModel.findOneAndUpdate(
+    return this.likeModel.findOneAndUpdate(
       { word: new Types.ObjectId(wordId), user: new Types.ObjectId(userId) },
       {
         value,
@@ -44,7 +44,5 @@ export class WordsService {
         new: true,
       },
     );
-    console.log(test);
-    return test;
   }
 }
