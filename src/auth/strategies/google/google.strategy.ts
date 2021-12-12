@@ -29,36 +29,3 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     done(null, user);
   }
 }
-
-/*
-profile {
-  id: '106902719590946479618',
-  displayName: 'Kalagounet',
-  name: { familyName: undefined, givenName: 'Kalagounet' },
-  emails: [ { value: 'gounet80@gmail.com', verified: true } ],
-  photos: [
-    {
-      value: 'https://lh3.googleusercontent.com/a-/AOh14Ghf7nJJaVxcAlMJBHtmDMopOJ055LyRxOopHXF-_g=s96-c'
-    }
-  ],
-  provider: 'google',
-  _raw: '{\n' +
-    '  "sub": "106902719590946479618",\n' +
-    '  "name": "Kalagounet",\n' +
-    '  "given_name": "Kalagounet",\n' +
-    '  "picture": "https://lh3.googleusercontent.com/a-/AOh14Ghf7nJJaVxcAlMJBHtmDMopOJ055LyRxOopHXF-_g\\u003ds96-c",\n' +
-    '  "email": "gounet80@gmail.com",\n' +
-    '  "email_verified": true,\n' +
-    '  "locale": "fr"\n' +
-    '}',
-  _json: {
-    sub: '106902719590946479618',
-    name: 'Kalagounet',
-    given_name: 'Kalagounet',
-    picture: 'https://lh3.googleusercontent.com/a-/AOh14Ghf7nJJaVxcAlMJBHtmDMopOJ055LyRxOopHXF-_g=s96-c',
-    email: 'gounet80@gmail.com',
-    email_verified: true,
-    locale: 'fr'
-  }
-}
-*/
