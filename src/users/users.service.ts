@@ -16,4 +16,13 @@ export class UsersService {
     const user = new this.userModel(createUserDto);
     return (await user.save()).toObject();
   }
+
+  async syncProviderUser(createUserDto: CreateUserDto): Promise<User> {
+    const query: any = {};
+    if (createUserDto.googleId) query.googleId = createUserDto.googleId;
+    let user = await this.userModel.findOne(query);
+    if (user) return user;
+    user = new this.userModel(createUserDto);
+    return (await user.save()).toObject();
+  }
 }

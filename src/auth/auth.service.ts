@@ -54,4 +54,20 @@ export class AuthService {
       })
       .send({ success: true });
   }
+
+  async googleLogin(googleUser: any, res) {
+    if (!googleUser) throw new Error('No user from google');
+    const user = await this.usersService.syncProviderUser(googleUser);
+
+    const accessToken = this.jwtService.sign(user);
+    res
+      .cookie(jwtConstants.cookieName, accessToken, {
+        httpOnly: true,
+        domain: 'localhost', // your domain here!
+        expires: new Date(
+          Date.now() + 1000 * 60 * 60 * jwtConstants.expiration,
+        ),
+      })
+      .send({ success: true });
+  }
 }

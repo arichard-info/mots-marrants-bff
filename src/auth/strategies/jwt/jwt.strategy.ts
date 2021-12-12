@@ -11,7 +11,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         return req?.cookies?.[jwtConstants.cookieName];
       },
       ignoreExpiration: false,
-      secretOrKey: jwtConstants.secret,
+      secretOrKey: `${process.env.JWT_AUTH_SECRET}`,
     });
   }
 
