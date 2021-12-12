@@ -1,8 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 
-import { Word } from './word.schema';
-
 export type LikeDocument = Like & mongoose.Document;
 
 @Schema()
@@ -15,6 +13,13 @@ export class Like {
 
   @Prop({ ref: 'word' })
   word: mongoose.Types.ObjectId;
+
+  @Prop({ ref: 'user' })
+  user: mongoose.Types.ObjectId;
 }
 
-export const LikeSchema = SchemaFactory.createForClass(Like);
+const LikeSchema = SchemaFactory.createForClass(Like);
+
+LikeSchema.index({ word: 1, user: 1 }, { unique: true });
+
+export { LikeSchema };
