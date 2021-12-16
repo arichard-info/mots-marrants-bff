@@ -27,6 +27,7 @@ export class AuthService {
     const accessToken = this.jwtService.sign(user);
     res
       .cookie(jwtConstants.cookieName, accessToken, {
+        signed: true,
         httpOnly: true,
         domain: 'localhost', // your domain here!
         expires: new Date(
