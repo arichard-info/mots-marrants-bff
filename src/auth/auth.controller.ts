@@ -6,6 +6,7 @@ import {
   UseGuards,
   Body,
   Get,
+  UseInterceptors,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './strategies/local/local-auth.guard';
 import { GoogleAuthGuard } from './strategies/google/google-auth.guard';
@@ -15,15 +16,15 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Post('signup')
+  signup(@Body() body, @Response() res) {
+    return this.authService.signup(body, res);
+  }
+
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req, @Response() res) {
     return this.authService.login(req.user, res);
-  }
-
-  @Post('signup')
-  signup(@Body() body, @Response() res) {
-    return this.authService.signup(body, res);
   }
 
   @UseGuards(GoogleAuthGuard)
@@ -33,6 +34,6 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
   googleAuthRedirect(@Request() req, @Response() res) {
-    return this.authService.googleLogin(req.user, res);
+    return this.authService.login(req.user, res);
   }
 }

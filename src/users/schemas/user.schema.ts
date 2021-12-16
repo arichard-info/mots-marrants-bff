@@ -6,20 +6,20 @@ export type UserDocument = User & mongoose.Document;
 
 @Schema()
 export class User {
-  @Prop()
+  @Prop({ unique: true, index: true })
   username: string;
 
   @Prop()
-  password: string;
+  password?: string;
 
-  @Prop({ unique: true, required: true })
+  @Prop({ required: true, unique: true, index: true })
   email: string;
 
   @Prop({ default: 'visitor' })
   role: string;
 
-  @Prop({ unique: true })
-  googleId: string;
+  @Prop({ unique: true, sparse: true })
+  googleId?: string;
 }
 
 const UserSchema = SchemaFactory.createForClass(User);
