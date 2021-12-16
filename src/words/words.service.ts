@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Word, WordDocument } from './schemas/word.schema';
 import { Like, LikeDocument } from './schemas/like.schema';
 import { CreateWordDto } from './dto/create-word.dto';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class WordsService {
@@ -31,7 +32,7 @@ export class WordsService {
 
   async updateLike(wordId: string, userId: string, value: number) {
     const word = await this.wordModel.findOne({ _id: wordId });
-    if (!word) throw new Error('Error: word not found');
+    if (!word) throw new NotFoundException();
 
     return this.likeModel.findOneAndUpdate(
       { word: new Types.ObjectId(wordId), user: new Types.ObjectId(userId) },
