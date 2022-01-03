@@ -17,6 +17,22 @@ export class WordsService {
     return this.wordModel.find().populate('likesCount dislikesCount').exec();
   }
 
+  async findUserLast(userId: string): Promise<Word> {
+    return this.wordModel.findOne({ user: userId }, {}, { sort: { date: -1 } });
+  }
+
+  async delete(wordId: string): Promise<any> {
+    return this.wordModel.deleteOne({ _id: wordId });
+  }
+
+  async validate(wordId: string): Promise<Word> {
+    return this.wordModel.findOneAndUpdate({ _id: wordId }, { valid: true });
+  }
+
+  async invalidate(wordId: string): Promise<Word> {
+    return this.wordModel.findOneAndUpdate({ _id: wordId }, { valid: false });
+  }
+
   async create(createWordDto: CreateWordDto): Promise<Word> {
     const createdWord = new this.wordModel(createWordDto);
     return createdWord.save();

@@ -17,6 +17,9 @@ export class Word {
 
   @Prop()
   date: Date;
+
+  @Prop({ ref: 'user' })
+  user: mongoose.Types.ObjectId;
 }
 
 const WordSchema = SchemaFactory.createForClass(Word);
