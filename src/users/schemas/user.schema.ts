@@ -15,7 +15,7 @@ export class User {
   @Prop({ required: true, unique: true, index: true })
   email: string;
 
-  @Prop({ default: 'visitor' })
+  @Prop({ default: 'user' })
   role: string;
 
   @Prop({ unique: true, sparse: true })
