@@ -15,29 +15,45 @@ import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
 import { Roles } from '../auth/roles/roles.decorator';
 import { Role } from '../auth/roles/role.enum';
 import { LimitationGuard } from './words.guards';
+import {
+  ApiCookieAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+@ApiTags('words')
 @Controller('words')
 export class WordsController {
   constructor(private readonly wordsService: WordsService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all words' })
+  @ApiResponse({
+    status: 200,
+    description: 'Array of words',
+    type: [Word],
+  })
   findAll(): Promise<Word[]> {
     return this.wordsService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('/:id/like')
-  likeWord(@Param() params, @Request() req) {
-    return this.wordsService.like(params.id, req.user._id);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('/:id/dislike')
-  dislikeWord(@Param() params, @Request() req) {
-    return this.wordsService.dislike(params.id, req.user._id);
-  }
-
-  @UseGuards(JwtAuthGuard, LimitationGuard)
   @Post()
+  @UseGuards(JwtAuthGuard, LimitationGuard)
+  @ApiCookieAuth('access_token')
+  @ApiOperation({ summary: 'Create a word' })
+  @ApiResponse({
+    status: 200,
+    description: 'The created word',
+    type: Word,
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden operation',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized, you need to log in',
+  })
   addWord(
     @Body() createWordBody: CreateWordDto,
     @Request() req,
@@ -48,24 +64,102 @@ export class WordsController {
     });
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Roles(Role.Admin)
   @Delete('/:id')
-  deleteWord(@Param() params) {
-    return this.wordsService.delete(params.id);
-  }
-
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Admin)
+  @ApiCookieAuth('access_token')
+  @ApiOperation({ summary: 'Delete a word' })
+  @ApiResponse({
+    status: 200,
+    description: 'Word has been deleted',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden operation',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized, you need to log in',
+  })
+  deleteWord(@Param('id') id: string) {
+    return this.wordsService.delete(id);
+  }
+
+  @Post('/:id/like')
+  @UseGuards(JwtAuthGuard)
+  @ApiCookieAuth('access_token')
+  @ApiOperation({ summary: 'Like a word' })
+  @ApiResponse({
+    status: 200,
+    description: 'The updated word',
+    type: Word,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized, you need to log in',
+  })
+  likeWord(@Param('id') id: string, @Request() req) {
+    return this.wordsService.like(id, req.user._id);
+  }
+
+  @Post('/:id/dislike')
+  @UseGuards(JwtAuthGuard)
+  @ApiCookieAuth('access_token')
+  @ApiOperation({ summary: 'Dislike a word' })
+  @ApiResponse({
+    status: 200,
+    description: 'The updated word',
+    type: Word,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized, you need to log in',
+  })
+  dislikeWord(@Param('id') id: string, @Request() req) {
+    return this.wordsService.dislike(id, req.user._id);
+  }
+
   @Post('/:id/validate')
-  validateWord(@Param() params) {
-    return this.wordsService.validate(params.id);
-  }
-
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Admin)
+  @ApiCookieAuth('access_token')
+  @ApiOperation({ summary: 'Validate a word' })
+  @ApiResponse({
+    status: 200,
+    description: 'The updated word',
+    type: Word,
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden operation',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized, you need to log in',
+  })
+  validateWord(@Param('id') id: string) {
+    return this.wordsService.validate(id);
+  }
+
   @Post('/:id/invalidate')
-  invalidateWord(@Param() params) {
-    return this.wordsService.invalidate(params.id);
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
+  @ApiCookieAuth('access_token')
+  @ApiOperation({ summary: 'Invalidate a word' })
+  @ApiResponse({
+    status: 200,
+    description: 'The updated word',
+    type: Word,
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden operation',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized, you need to log in',
+  })
+  invalidateWord(@Param('id') id: string) {
+    return this.wordsService.invalidate(id);
   }
 }
