@@ -11,7 +11,8 @@ import {
 import { LocalAuthGuard } from './strategies/local/local-auth.guard';
 import { GoogleAuthGuard } from './strategies/google/google-auth.guard';
 import { AuthService } from './auth.service';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 
 export type WordDocument = Word & mongoose.Document;
 
@@ -10,15 +11,19 @@ export type WordDocument = Word & mongoose.Document;
 })
 export class Word {
   @Prop({ required: true })
+  @ApiProperty()
   value: string;
 
   @Prop()
+  @ApiProperty()
   valid: boolean;
 
   @Prop()
+  @ApiProperty()
   date: Date;
 
   @Prop({ ref: 'user' })
+  @ApiProperty({ type: 'string' })
   user: mongoose.Types.ObjectId;
 }
 
@@ -39,7 +44,5 @@ WordSchema.virtual('dislikesCount', {
   count: true,
   match: { value: -1 },
 });
-
-// WordSchema.virtual('likesCount').get(async function () {});
 
 export { WordSchema };
